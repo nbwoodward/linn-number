@@ -18,8 +18,6 @@
 #    # Tests all numbers between 1 and 100 (inclusive)
 #    python3 linn_number.py 1 100
 #
-#
-#
 import sys
 
 MAX_TRIES = 100
@@ -27,7 +25,7 @@ MAX_TRIES = 100
 def doCalc(num, verbose=False):
     nextAdd = 1
     current = num
-    steppingUp = False
+    descending = True
     tries = 1
     turnArounds = {}
 
@@ -35,7 +33,21 @@ def doCalc(num, verbose=False):
         print("Beginning descent at", current)
 
     while tries < MAX_TRIES:
-        if steppingUp:
+
+        # Descending
+        if descending:
+            if current - nextAdd < 0:
+                if verbose:
+                    print("Beginning ascent at", current)
+                nextAdd = 2
+                descending = False
+
+            else:
+                current -= nextAdd
+                nextAdd += 1
+
+        # Ascending
+        else:
             if current + nextAdd == num:
                 if verbose:
                     print("Reached", num, "again after", tries, "tries!")
@@ -46,7 +58,7 @@ def doCalc(num, verbose=False):
                 if verbose:
                     print("End try", tries, "beginning descent at", current)
                 nextAdd = 1
-                steppingUp = False
+                descending = True
                 tries += 1
                 if current in turnArounds:
                     if verbose:
@@ -58,17 +70,6 @@ def doCalc(num, verbose=False):
                 current += nextAdd
                 nextAdd += 2
 
-        # Stepping down
-        else:
-            if current - nextAdd < 0:
-                if verbose:
-                    print("Beginning ascent at", current)
-                nextAdd = 2
-                steppingUp = True
-
-            else:
-                current -= nextAdd
-                nextAdd += 1
 
     print("Reached max tries without getting back to  our number!")
     return -1
